@@ -4,5 +4,23 @@
     { "source": "/api", "destination": "/api/index.js" },
     { "source": "/welcome", "destination": "/api/welcome.js" },
     { "source": "/goodbye", "destination": "/api/goodbye.js" }
+  ],
+  "builds": [
+    {
+      "src": "**/*.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "fonts/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "aset/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    }
   ]
 }
