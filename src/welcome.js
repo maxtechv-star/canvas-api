@@ -1,5 +1,12 @@
 const Canvas = require('canvas')
 const fs = require("fs")
+const path = require('path')
+
+// ✅ Register the font BEFORE the class definition
+Canvas.registerFont(
+  path.join(__dirname, '../fonts/edo.ttf'), 
+  { family: 'edo' }
+);
 
 module.exports = class welcome {
   constructor() {
@@ -63,20 +70,14 @@ module.exports = class welcome {
     ctx.drawImage(avatar, -90, 274, 450, 450);
     ctx.restore();
     
-    // **FIX: Load and register font properly**
-    // First, try to register font if font file exists
-    // Since we don't have edo.ttf, we'll use default font
-    const fontSize = 70;
-    
-    // Draw user name
+    // ✅ Draw user name with EDO font
     let usrname = this.name;
     let name = usrname.length > 15 ? usrname.substring(0, 15) + "..." : usrname;
     
-    // **FIXED FONT SYNTAX**
-    ctx.font = `${fontSize}px Arial, sans-serif`; // Use Arial as fallback
+    // Use the registered 'edo' font
+    ctx.font = "70px 'edo'";
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = 'left';
-    ctx.textBaseline = 'alphabetic';
     ctx.fillText(name, 700, 925);
     
     // Draw group name
@@ -84,17 +85,15 @@ module.exports = class welcome {
     let usrname2 = this.grupame;
     let name2 = usrname2.length > 10 ? usrname2.substring(0, 10) + "..." : usrname2;
     
-    // **FIXED: Set font BEFORE drawing text**
-    ctx.font = "700 150px 'Courier New', monospace";
+    // Courier New for group name
+    ctx.font = "700 150px 'Courier New'";
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
     ctx.fillText(name2, 1210, 700);
     
-    // Draw member count
-    ctx.font = "700 40px 'Courier New', monospace";
+    // Member count
+    ctx.font = "700 40px 'Courier New'";
     ctx.textAlign = 'left';
-    ctx.textBaseline = 'alphabetic';
     ctx.fillText(`${this.member}th member`, 700, 1035);
     ctx.restore();
     

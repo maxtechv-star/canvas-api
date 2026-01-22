@@ -1,5 +1,12 @@
 const Canvas = require('canvas')
 const fs = require("fs")
+const path = require('path')
+
+// ✅ Register the font BEFORE the class definition
+Canvas.registerFont(
+  path.join(__dirname, '../fonts/edo.ttf'), 
+  { family: 'edo' }
+);
 
 module.exports = class goodbye {
   constructor() {
@@ -57,22 +64,20 @@ module.exports = class goodbye {
     ctx.drawImage(avatar, -90, 274, 450, 450);
     ctx.restore();
     
-    // **FIX: Draw text with proper font**
+    // ✅ Draw user name with EDO font
     let usrname = this.name;
     let name = usrname.length > 15 ? usrname.substring(0, 15) + "..." : usrname;
     
-    // **FIXED FONT SYNTAX**
-    ctx.font = "70px Arial, sans-serif"; // Use Arial as fallback for 'edo'
+    // Use the registered 'edo' font
+    ctx.font = "70px 'edo'";
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = 'left';
-    ctx.textBaseline = 'alphabetic';
     ctx.fillText(name, 700, 925);
     
-    // Draw member count
-    ctx.font = "700 40px 'Courier New', monospace";
+    // Member count
+    ctx.font = "700 40px 'Courier New'";
     ctx.fillStyle = "#ffffff";
     ctx.textAlign = 'left';
-    ctx.textBaseline = 'alphabetic';
     ctx.fillText(`${this.member}th member`, 700, 1035);
     
     return canvas;
