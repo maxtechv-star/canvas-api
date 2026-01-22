@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/bruno918/canvas_welcome#readme",
   "dependencies": {
-    "canvas": "^2.11.2"
+    "canvas": "^3.2.1"
   },
   "engines": {
     "node": "24.x"
