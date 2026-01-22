@@ -1,0 +1,27 @@
+{
+  "functions": {
+    "api/welcome.js": {
+      "maxDuration": 10
+    },
+    "api/goodbye.js": {
+      "maxDuration": 10
+    }
+  },
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/api", "destination": "/api/index.js" },
+    { "source": "/welcome", "destination": "/api/welcome.js" },
+    { "source": "/goodbye", "destination": "/api/goodbye.js" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Credentials", "value": "true" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
+      ]
+    }
+  ]
+}

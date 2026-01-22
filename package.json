@@ -1,0 +1,27 @@
+{
+  "name": "wlcanvass",
+  "version": "1.0.3",
+  "description": "Canvas welcome/goodbye card generator API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bruno918/canvas_welcome"
+  },
+  "keywords": ["welcome", "goodbye", "canvas", "api", "discord", "whatsapp"],
+  "author": "yogi and brunoww",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bruno918/canvas_welcome/issues"
+  },
+  "homepage": "https://github.com/bruno918/canvas_welcome#readme",
+  "dependencies": {
+    "canvas": "^2.9.1",
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=14.x"
+  }
+}

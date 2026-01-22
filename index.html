@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Welcome/Goodbye Generator</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { text-align: center; color: white; padding: 40px 0; }
+        h1 { font-size: 3em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .subtitle { font-size: 1.2em; opacity: 0.9; }
+        .card { background: white; border-radius: 15px; padding: 30px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; }
+        input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; transition: border 0.3s; }
+        input:focus { border-color: #667eea; outline: none; }
+        .button-group { display: flex; gap: 15px; margin-top: 30px; }
+        button { flex: 1; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+        .welcome-btn { background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%); color: white; }
+        .goodbye-btn { background: linear-gradient(to right, #f093fb 0%, #f5576c 100%); color: white; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .preview { text-align: center; margin-top: 40px; }
+        .preview img { max-width: 100%; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 5px solid white; }
+        .url-display { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 20px; word-break: break-all; font-family: monospace; }
+        .examples { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 40px; }
+        .example-card { background: rgba(255,255,255,0.9); padding: 20px; border-radius: 10px; }
+        .example-card h3 { margin-bottom: 15px; color: #667eea; }
+        code { background: #eee; padding: 2px 5px; border-radius: 3px; }
+        footer { text-align: center; margin-top: 50px; color: white; padding: 20px; opacity: 0.8; }
+        @media (max-width: 768px) {
+            .button-group { flex-direction: column; }
+            h1 { font-size: 2em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎨 Canvas Welcome/Goodbye Generator</h1>
+            <p class="subtitle">Generate beautiful welcome and goodbye cards for Discord, WhatsApp, and more</p>
+        </header>
+        
+        <div class="card">
+            <h2>⚙️ Generate Card</h2>
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" value="John Doe" placeholder="Enter name">
+            </div>
+            <div class="form-group">
+                <label for="profile">Profile Image URL:</label>
+                <input type="text" id="profile" value="https://i.ibb.co/G5mJZxs/rin.jpg" placeholder="Enter profile image URL">
+            </div>
+            <div class="form-group">
+                <label for="bg">Background Image URL:</label>
+                <input type="text" id="bg" value="https://telegra.ph/file/9c4f90673ba1fe158fc3f.jpg" placeholder="Enter background image URL">
+            </div>
+            <div class="form-group">
+                <label for="grupame">Group Name (Welcome only):</label>
+                <input type="text" id="grupame" value="My Awesome Group" placeholder="Enter group name">
+            </div>
+            <div class="form-group">
+                <label for="member">Member Count:</label>
+                <input type="text" id="member" value="42" placeholder="Enter member number">
+            </div>
+            
+            <div class="button-group">
+                <button class="welcome-btn" onclick="generateWelcome()">Generate Welcome Card</button>
+                <button class="goodbye-btn" onclick="generateGoodbye()">Generate Goodbye Card</button>
+            </div>
+        </div>
+        
+        <div class="preview">
+            <h2>🖼️ Preview</h2>
+            <div id="image-container">
+                <p>Click a button above to generate a card</p>
+            </div>
+            <div id="url-container" class="url-display" style="display: none;">
+                <strong>API URL:</strong> <span id="api-url"></span>
+            </div>
+        </div>
+        
+        <div class="examples">
+            <div class="example-card">
+                <h3>📚 API Documentation</h3>
+                <p><strong>Welcome Endpoint:</strong><br>
+                <code>GET /api/welcome?name=User&profile=URL&bg=URL&grupame=GROUP&member=1</code></p>
+                <p><strong>Goodbye Endpoint:</strong><br>
+                <code>GET /api/goodbye?name=User&profile=URL&bg=URL&member=1</code></p>
+                <p>Both endpoints also accept POST requests with JSON body.</p>
+            </div>
+            <div class="example-card">
+                <h3>🚀 Quick Examples</h3>
+                <p><strong>Welcome:</strong><br>
+                <code>/api/welcome?name=Alice&grupame=DevTeam&member=50</code></p>
+                <p><strong>Goodbye:</strong><br>
+                <code>/api/goodbye?name=Bob&member=99</code></p>
+                <p>Images are returned as PNG format.</p>
+            </div>
+            <div class="example-card">
+                <h3>🔧 Integration</h3>
+                <p>Use in Discord bots, WhatsApp bots, or any application:</p>
+                <code>
+                const imageUrl = `https://your-domain.vercel.app/api/welcome?name=${userName}`;
+                </code>
+                <p style="margin-top: 10px;">The API supports CORS and can be used directly in browsers.</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Powered by <strong>wlcanvass</strong> | Created by yogi and brunoww</p>
+            <p>GitHub: <a href="https://github.com/bruno918/canvas_welcome" style="color: white;">bruno918/canvas_welcome</a></p>
+        </footer>
+    </div>
+    
+    <script>
+        function getBaseUrl() {
+            return window.location.origin;
+        }
+        
+        function generateWelcome() {
+            const params = {
+                name: document.getElementById('name').value,
+                profile: document.getElementById('profile').value,
+                bg: document.getElementById('bg').value,
+                grupame: document.getElementById('grupame').value,
+                member: document.getElementById('member').value
+            };
+            
+            const queryString = new URLSearchParams(params).toString();
+            const url = `${getBaseUrl()}/api/welcome?${queryString}`;
+            
+            displayImage(url);
+            displayUrl(url);
+        }
+        
+        function generateGoodbye() {
+            const params = {
+                name: document.getElementById('name').value,
+                profile: document.getElementById('profile').value,
+                bg: document.getElementById('bg').value,
+                member: document.getElementById('member').value
+            };
+            
+            const queryString = new URLSearchParams(params).toString();
+            const url = `${getBaseUrl()}/api/goodbye?${queryString}`;
+            
+            displayImage(url);
+            displayUrl(url);
+        }
+        
+        function displayImage(url) {
+            const container = document.getElementById('image-container');
+            container.innerHTML = `
+                <img src="${url}" alt="Generated Card" onload="this.style.display='block'" 
+                     style="display:none; max-width: 600px; margin: 0 auto;">
+                <p style="margin-top: 10px;">Loading image...</p>
+            `;
+            
+            // Remove loading text when image loads
+            setTimeout(() => {
+                const img = container.querySelector('img');
+                if (img) {
+                    img.onload = function() {
+                        container.querySelector('p').style.display = 'none';
+                    };
+                }
+            }, 100);
+        }
+        
+        function displayUrl(url) {
+            const container = document.getElementById('url-container');
+            const urlElement = document.getElementById('api-url');
+            urlElement.textContent = url;
+            container.style.display = 'block';
+            
+            // Copy to clipboard functionality
+            urlElement.onclick = function() {
+                navigator.clipboard.writeText(url).then(() => {
+                    const originalText = urlElement.textContent;
+                    urlElement.textContent = '✅ Copied!';
+                    setTimeout(() => {
+                        urlElement.textContent = originalText;
+                    }, 2000);
+                });
+            };
+            urlElement.style.cursor = 'pointer';
+            urlElement.title = 'Click to copy';
+        }
+        
+        // Initialize with a welcome card
+        window.onload = generateWelcome;
+    </script>
+</body>
+</html>
