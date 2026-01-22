@@ -1,5 +1,7 @@
 module.exports = async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    
     res.status(200).json({
         message: 'Welcome/Goodbye Canvas API',
         endpoints: {
@@ -15,8 +17,9 @@ module.exports = async (req, res) => {
             }
         },
         example: {
-            welcome: '/api/welcome?name=John&profile=https://example.com/avatar.jpg&grupame=MyGroup&member=42',
-            goodbye: '/api/goodbye?name=Jane&profile=https://example.com/avatar2.jpg&member=42'
-        }
+            welcome: '/api/welcome?name=John&grupame=MyGroup&member=42',
+            goodbye: '/api/goodbye?name=Jane&member=99'
+        },
+        github: 'https://github.com/bruno918/canvas_welcome'
     });
 };

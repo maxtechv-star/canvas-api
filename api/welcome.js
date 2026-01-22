@@ -2,15 +2,19 @@ const { welcome } = require('../index.js');
 
 module.exports = async (req, res) => {
     try {
-        res.setHeader('Access-Control-Allow-Credentials', true);
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        
-        if (req.method === 'OPTIONS') return res.status(200).end();
-        if (req.method !== 'GET' && req.method !== 'POST') {
-            return res.status(405).json({ error: 'Method not allowed' });
+        // Handle CORS
+        if (req.method === 'OPTIONS') {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+            return res.status(200).end();
         }
         
-        const params = req.method === 'GET' ? req.query : req.body;
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Cache-Control', 'public, max-age=86400');
+        
+        // Get parameters
+        const params = req.method === 'POST' ? req.body : req.query;
         
         const welcomeCard = new welcome()
             .setName(params.name || 'User')
@@ -20,14 +24,17 @@ module.exports = async (req, res) => {
             .setMember(params.member || '1');
         
         const canvas = await welcomeCard.startWelcome();
-        const buffer = canvas.toBuffer();
+        const buffer = canvas.toBuffer('image/png');
         
         res.setHeader('Content-Type', 'image/png');
-        res.setHeader('Cache-Control', 'public, max-age=86400');
         res.status(200).send(buffer);
         
     } catch (error) {
         console.error('Error:', error);
-        res.status(500).json({ error: 'Failed to generate image', message: error.message });
+        res.setHeader('Content-Type', 'application/json');
+        res.status(500).json({ 
+            error: 'Failed to generate image', 
+            message: error.message 
+        });
     }
 };
